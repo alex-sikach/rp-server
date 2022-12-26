@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "public/index.js",
+  "type": "module",
   "scripts": {
     "start": "node public/index.js",
     "dev": "nodemon public/index.js"
