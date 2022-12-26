@@ -1,4 +1,4 @@
-import pool from "../pool";
+import pool from "../pool.js";
 import bcrypt from 'bcryptjs';
 import { v4 as randomSessionId } from 'uuid';
 async function register(req, res) {
@@ -17,14 +17,14 @@ async function register(req, res) {
                 return res.status(400).send('Invalid credentials');
             }
             else {
-                const alreadyRegistered = Boolean((await pool.query('SELECT count(*) FROM users WHERE username = $1', [body.username])).rows[0].count !== 0);
+                const alreadyRegistered = Boolean((await pool.query('SELECT count(*) FROM users WHERE username = $1', [body.username])).rows[0].count != 0);
                 if (alreadyRegistered) {
                     return res.status(409).send('Already exists');
                 }
                 else {
                     const hash = (await bcrypt.hash(body.password, 5));
                     await pool.query('INSERT INTO users(username, name, lastname, password) VALUES($1, $2, $3, $4)', [body.username, body.name, body.lastname, hash]);
-                    const user_id = await pool.query('SELECT id FROM users WHERE username = $1', [body.username]);
+                    const user_id = Number((await pool.query('SELECT id FROM users WHERE username = $1', [body.username])).rows[0].id);
                     const sessionId = (randomSessionId()).slice(0, 100);
                     const expires = Date.now() + (1 * 24 * 60 * 60 * 1000); // expires in 1 day(milliseconds)
                     await pool.query('INSERT INTO sessions(id, user_id, open, expires) VALUES($1, $2, false, $3)', [sessionId, user_id, expires]);

@@ -1,4 +1,4 @@
-import pool from '../pool';
+import pool from '../pool.js';
 async function profile(req, res) {
     try {
         const headers = req.headers;
@@ -7,7 +7,7 @@ async function profile(req, res) {
             const sessionId = headers.cookie.split('=')[1];
             const expires = (await pool.query('SELECT expires WHERE id = $1', [sessionId])).rows[0];
             if (Date.now() > expires) {
-                await pool.query('UPDATE TABLE sessions SET open = false WHERE id = $1', [sessionId]);
+                await pool.query('UPDATE sessions SET open = false WHERE id = $1', [sessionId]);
                 return res.status(403).send('Session has expired. Log in again');
             }
             const user_id = Number(req.params.user_id);

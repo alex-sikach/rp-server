@@ -1,8 +1,8 @@
-import profile from 'paths/profile'
-import register from 'paths/register'
-import deleteAccount from "./paths/deleteAccount"
-import login from "./paths/login"
-import logout from './paths/logout'
+import profile from './paths/profile.js'
+import register from './paths/register.js'
+import deleteAccount from "./paths/deleteAccount.js"
+import login from "./paths/login.js"
+import logout from './paths/logout.js'
 
 export default {
     register,

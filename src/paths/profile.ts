@@ -1,4 +1,4 @@
-import pool from '../pool'
+import pool from '../pool.js'
 import {Request, Response} from "express";
 import {IPublicUser} from "../declaration/interfaces";
 
@@ -16,7 +16,7 @@ async function profile(req: Request, res: Response) {
             )).rows[0]
             if(Date.now() > expires) {
                 await pool.query(
-                    'UPDATE TABLE sessions SET open = false WHERE id = $1',
+                    'UPDATE sessions SET open = false WHERE id = $1',
                     [sessionId]
                 )
                 return res.status(403).send('Session has expired. Log in again')

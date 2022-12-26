@@ -1,4 +1,4 @@
-import pool from '../pool'
+import pool from '../pool.js'
 import {Request, Response} from "express";
 
 async function logout(req: Request, res: Response) {
@@ -10,7 +10,7 @@ async function logout(req: Request, res: Response) {
         ) {
             const sessionId = headers.cookie.split('=')[1]
             await pool.query(
-                'UPDATE TABLE sessions SET open = false WHERE id = $1',
+                'UPDATE sessions SET open = false WHERE id = $1',
                 [sessionId]
             )
             // todo: compare this way and res.clearCookie('session')

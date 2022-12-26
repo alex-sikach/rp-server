@@ -1,4 +1,4 @@
-import pool from "../pool";
+import pool from "../pool.js";
 import {Request, Response} from "express";
 import bcrypt from 'bcryptjs'
 import {IRegisterBody} from "../declaration/interfaces";
@@ -25,7 +25,7 @@ async function register(req: Request, res: Response) {
                 const alreadyRegistered = Boolean((await pool.query(
                     'SELECT count(*) FROM users WHERE username = $1',
                     [body.username]
-                )).rows[0].count !== 0)
+                )).rows[0].count != 0)
                 if(alreadyRegistered) {
                     return res.status(409).send('Already exists')
                 } else {
@@ -34,10 +34,10 @@ async function register(req: Request, res: Response) {
                         'INSERT INTO users(username, name, lastname, password) VALUES($1, $2, $3, $4)',
                         [body.username, body.name, body.lastname, hash]
                     )
-                    const user_id = await pool.query(
+                    const user_id = Number((await pool.query(
                         'SELECT id FROM users WHERE username = $1',
                         [body.username]
-                    )
+                    )).rows[0].id)
                     const sessionId = (randomSessionId()).slice(0, 100)
                     const expires = Date.now() + (1*24*60*60*1000) // expires in 1 day(milliseconds)
                     await pool.query(

@@ -1,4 +1,4 @@
-import pool from "../pool";
+import pool from "../pool.js";
 import {Request, Response} from "express";
 
 async function deleteAccount(req: Request, res: Response) {
@@ -12,19 +12,16 @@ async function deleteAccount(req: Request, res: Response) {
             const loggedIn = Boolean((await pool.query(
                 'SELECT count(*) FROM sessions WHERE id = $1 AND open = true',
                 [sessionId]
-            )).rows[0].length !== 0);
+            )).rows[0].count != 0);
             if(!loggedIn) {
                 return res.send('Log in first')
             }
             const { user_id } = (await pool.query(
-                'SELECT user_id WHERE id = $1',
+                'SELECT user_id FROM sessions WHERE id = $1',
                 [sessionId]
             )).rows[0]
-            await pool.query(
-                'UPDATE TABLE sessions SET open = false WHERE id = $1',
-                [sessionId]
-            )
             res.clearCookie('session')
+            // deleting user and sessions is being deleted itself(on cascade delete)
             await pool.query(
                 'DELETE FROM users WHERE id = $1',
                 [ user_id ]

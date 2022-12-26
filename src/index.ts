@@ -1,7 +1,7 @@
 import express, {Express, Response, Request} from "express"
 import cors from "cors"
-import paths from "./paths";
-import pool from "./pool";
+import paths from "./paths.js";
+import pool from "./pool.js";
 
 const app: Express = express();
 const port = process.env.PORT || 5000;
@@ -21,7 +21,7 @@ app.listen(port, async () => {
     try {
         console.log(`server has started on port ${port}`)
         await pool.query(
-            'UPDATE TABLE sessions SET open = false'
+            'UPDATE sessions SET open = false'
         )
     } catch (e) {
         console.log(e);

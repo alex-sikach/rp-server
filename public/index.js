@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
-import paths from "./paths";
-import pool from "./pool";
+import paths from "./paths.js";
+import pool from "./pool.js";
 const app = express();
 const port = process.env.PORT || 5000;
 //middleware
@@ -16,7 +16,7 @@ app.get('/profile', paths.profile);
 app.listen(port, async () => {
     try {
         console.log(`server has started on port ${port}`);
-        await pool.query('UPDATE TABLE sessions SET open = false');
+        await pool.query('UPDATE sessions SET open = false');
     }
     catch (e) {
         console.log(e);
