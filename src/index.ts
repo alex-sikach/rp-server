@@ -1,6 +1,7 @@
 import express, {Express, Response, Request} from "express"
 import cors from "cors"
 import paths from "./paths";
+import pool from "./pool";
 
 const app: Express = express();
 const port = process.env.PORT || 5000;
@@ -19,8 +20,9 @@ app.get('/profile', paths.profile)
 app.listen(port, async () => {
     try {
         console.log(`server has started on port ${port}`)
-        // todo: deleting all db sessions
-        // todo: restarting users_is_seq sequence
+        await pool.query(
+            'UPDATE TABLE sessions SET open = false'
+        )
     } catch (e) {
         console.log(e);
     }
