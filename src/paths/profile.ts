@@ -10,7 +10,7 @@ async function profile(req: Request, res: Response) {
             && headers?.cookie[ headers?.cookie.indexOf('session')+7 ] === '='
         ) {
             const sessionId = headers.cookie.split('=')[1]
-            const expires = (await pool.query(
+            const { expires } = (await pool.query(
                 'SELECT expires WHERE id = $1',
                 [sessionId]
             )).rows[0]

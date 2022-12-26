@@ -1,4 +1,4 @@
-import express, {Express, Response, Request} from "express"
+import express, {Express} from "express"
 import cors from "cors"
 import paths from "./paths.js";
 import pool from "./pool.js";
