@@ -9,6 +9,13 @@ async function profile(req: Request, res: Response) {
             headers.cookie?.includes('session')
             && headers?.cookie[ headers?.cookie.indexOf('session')+7 ] === '='
         ) {
+            const doesntExist = Boolean( (await pool.query(
+                'SELECT count(*) FROM sessions WHERE id = $1 AND open = true',
+                [headers.cookie.split('=')[1]]
+            )).rows[0].count == 0)
+            if(doesntExist) {
+                return res.status(400).send('Has wrong cookie')
+            }
             const sessionId = headers.cookie.split('=')[1]
             const { expires, user_id } = (await pool.query(
                 'SELECT expires, user_id FROM sessions WHERE id = $1',
@@ -21,16 +28,11 @@ async function profile(req: Request, res: Response) {
                 )
                 return res.status(403).send('Session has expired. Log in again')
             }
-            const assumed_user = (await pool.query(
+            const user: IPublicUser = (await pool.query(
                 'SELECT username, name, lastname, avatar, theme FROM users WHERE id = $1',
                 [user_id]
-            )).rows;
-            if(!assumed_user.length) {
-                return res.status(400).send('Has wrong cookie')
-            } else {
-                const user: IPublicUser = assumed_user[0]
-                res.json(user)
-            }
+            )).rows[0]
+            res.json(user)
         } else {
             res.send('Log in first')
         }

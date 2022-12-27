@@ -8,6 +8,13 @@ async function changeTheme(req: Request, res: Response) {
             headers.cookie?.includes('session')
             && headers?.cookie[ headers?.cookie.indexOf('session')+7 ] === '='
         ) {
+            const doesntExist = Boolean( (await pool.query(
+                'SELECT count(*) FROM sessions WHERE id = $1 AND open = true',
+                [headers.cookie.split('=')[1]]
+            )).rows[0].count == 0)
+            if(doesntExist) {
+                return res.status(400).send('Has wrong cookie')
+            }
             const sessionId = headers.cookie.split('=')[1]
             const { expires, user_id } = (await pool.query(
                 'SELECT expires, user_id FROM sessions WHERE id = $1',
@@ -30,19 +37,11 @@ async function changeTheme(req: Request, res: Response) {
             if(!valid) {
                 return res.status(400).send('Bad request! Theme is not valid')
             }
-            const exist = Boolean((await pool.query(
-                'SELECT count(*) FROM users WHERE id = $1',
-                [user_id]
-            )).rows[0].count != 0);
-            if(!exist) {
-                return res.status(400).send('Has wrong cookie')
-            } else {
-                await pool.query(
-                    'UPDATE users SET theme = $1 WHERE id = $2',
-                    [theme, user_id]
-                )
-                res.send('Success')
-            }
+            await pool.query(
+                'UPDATE users SET theme = $1 WHERE id = $2',
+                [theme, user_id]
+            )
+            res.send('Success')
         } else {
             res.send('Log in first')
         }
