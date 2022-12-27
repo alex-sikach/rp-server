@@ -1,5 +1,5 @@
-import pool from '../pool.js';
-async function profile(req, res) {
+import pool from "../pool.js";
+async function changeTheme(req, res) {
     try {
         const headers = req.headers;
         if (headers.cookie?.includes('session')
@@ -10,13 +10,23 @@ async function profile(req, res) {
                 await pool.query('UPDATE sessions SET open = false WHERE id = $1', [sessionId]);
                 return res.status(403).send('Session has expired. Log in again');
             }
-            const assumed_user = (await pool.query('SELECT username, name, lastname, avatar, theme FROM users WHERE id = $1', [user_id])).rows;
-            if (!assumed_user.length) {
+            const theme = req.body.theme;
+            let valid = false;
+            ['classic', 'dark', 'gray', 'christmas'].forEach(e => {
+                if (e === theme) {
+                    valid = true;
+                }
+            });
+            if (!valid) {
+                return res.status(400).send('Bad request! Theme is not valid');
+            }
+            const exist = Boolean((await pool.query('SELECT count(*) FROM users WHERE id = $1', [user_id])).rows[0].count != 0);
+            if (!exist) {
                 return res.status(400).send('Has wrong cookie');
             }
             else {
-                const user = assumed_user[0];
-                res.json(user);
+                await pool.query('UPDATE users SET theme = $1 WHERE id = $2', [theme, user_id]);
+                res.send('Success');
             }
         }
         else {
@@ -28,4 +38,4 @@ async function profile(req, res) {
         console.log(e);
     }
 }
-export default profile;
+export default changeTheme;
