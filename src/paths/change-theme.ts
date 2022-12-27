@@ -1,8 +1,7 @@
-import pool from '../pool.js'
+import pool from "../pool.js";
 import {Request, Response} from "express";
-import {IPublicUser} from "../declaration/interfaces";
 
-async function profile(req: Request, res: Response) {
+async function changeTheme(req: Request, res: Response) {
     try {
         const headers = req.headers;
         if(
@@ -21,15 +20,28 @@ async function profile(req: Request, res: Response) {
                 )
                 return res.status(403).send('Session has expired. Log in again')
             }
-            const assumed_user = (await pool.query(
-                'SELECT username, name, lastname, avatar, theme FROM users WHERE id = $1',
+            const theme = req.body.theme;
+            let valid = false;
+            ['classic', 'dark', 'gray', 'christmas'].forEach(e => {
+                if(e === theme) {
+                    valid = true;
+                }
+            })
+            if(!valid) {
+                return res.status(400).send('Bad request! Theme is not valid')
+            }
+            const exist = Boolean((await pool.query(
+                'SELECT count(*) FROM users WHERE id = $1',
                 [user_id]
-            )).rows;
-            if(!assumed_user.length) {
+            )).rows[0].count != 0);
+            if(!exist) {
                 return res.status(400).send('Has wrong cookie')
             } else {
-                const user: IPublicUser = assumed_user[0]
-                res.json(user)
+                await pool.query(
+                    'UPDATE users SET theme = $1 WHERE id = $2',
+                    [theme, user_id]
+                )
+                res.send('Success')
             }
         } else {
             res.send('Log in first')
@@ -40,4 +52,4 @@ async function profile(req: Request, res: Response) {
     }
 }
 
-export default profile
+export default changeTheme

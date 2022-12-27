@@ -16,6 +16,7 @@ app.get('/delete-account', paths.deleteAccount)
 app.post('/login', paths.login)
 app.get('/logout', paths.logout)
 app.get('/profile', paths.profile)
+app.post('/change-theme', paths.changeTheme)
 
 app.listen(port, async () => {
     try {
