@@ -11,12 +11,12 @@ app.use(cors())
 app.use(express.json())
 
 // ROUTES
-app.post('/register', paths.register)
-app.get('/delete-account', paths.deleteAccount)
-app.post('/login', paths.login)
-app.get('/logout', paths.logout)
-app.get('/profile', paths.profile)
-app.post('/change-theme', paths.changeTheme)
+app.post('/api/auth/register', paths.register)
+app.get('/api/auth/delete-account', paths.deleteAccount)
+app.post('/api/auth/login', paths.login)
+app.get('/api/auth/logout', paths.logout)
+app.get('/api/auth/profile', paths.profile)
+app.post('/api/auth/change-theme', paths.changeTheme)
 
 app.listen(port, async () => {
     try {
