@@ -3,6 +3,7 @@ import paths from "./paths.js";
 import pool from "./pool.js";
 import { fileURLToPath } from 'url';
 import path from 'path';
+import cookieParser from "cookie-parser";
 // due to {"type": "module"} in package.json we got neither __dirname nor __filename variables
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -11,6 +12,7 @@ const port = process.env.PORT || 5000;
 //middleware
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../client-build')));
+app.use(cookieParser());
 // ROUTES
 app.post('/api/auth/register', paths.register);
 app.get('/api/auth/delete-account', paths.deleteAccount);

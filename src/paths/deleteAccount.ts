@@ -3,12 +3,8 @@ import {Request, Response} from "express";
 
 async function deleteAccount(req: Request, res: Response) {
     try {
-        const headers = req.headers;
-        if(
-            headers.cookie?.includes('session')
-            && headers?.cookie[ headers?.cookie.indexOf('session')+7 ] === '='
-        ) {
-            const sessionId = headers.cookie.split('=')[1]
+        if(req.cookies.session) {
+            const sessionId = req.cookies.session
             const loggedIn = Boolean((await pool.query(
                 'SELECT count(*) FROM sessions WHERE id = $1 AND open = true',
                 [sessionId]

@@ -6,11 +6,7 @@ import {v4 as randomSessionId} from 'uuid'
 
 async function register(req: Request, res: Response) {
     try {
-        const headers = req.headers
-        if(
-            headers.cookie?.includes('session')
-            && headers?.cookie[ headers?.cookie.indexOf('session')+7 ] === '='
-        ) {
+        if(req.cookies.session) {
             return res.send("Log out first")
         } else {
             const body: IRegisterBody = req.body;

@@ -2,13 +2,11 @@ import pool from "../pool.js";
 import bcrypt from "bcryptjs";
 async function login(req, res) {
     try {
-        const headers = req.headers;
-        if (headers.cookie?.includes('session')) {
-            if (headers.cookie[headers.cookie.indexOf('session') + 7] === '=') {
-                const loggedIn = Boolean((await pool.query('SELECT count(*) FROM sessions WHERE id = $1 AND open = true', [headers.cookie.split('=')[1]])).rows[0].count != 0);
-                if (loggedIn) {
-                    return res.send('Already logged in');
-                }
+        if (req.cookies.session) {
+            const sessionId = req.cookies.session;
+            const loggedIn = Boolean((await pool.query('SELECT count(*) FROM sessions WHERE id = $1 AND open = true', [sessionId])).rows[0].count != 0);
+            if (loggedIn) {
+                return res.send('Already logged in');
             }
         }
         const { username, password } = req.body;
@@ -18,7 +16,7 @@ async function login(req, res) {
         }
         await pool.query('UPDATE sessions SET open = true WHERE user_id = $1', [user[0].id]);
         const sessionId = (await pool.query('SELECT id FROM sessions WHERE user_id = $1', [user[0].id])).rows[0].id;
-        res.set('Set-Cookie', `session=${sessionId}`);
+        res.cookie('session', sessionId);
         res.send('Success');
     }
     catch (e) {
