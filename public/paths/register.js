@@ -3,9 +3,7 @@ import bcrypt from 'bcryptjs';
 import { v4 as randomSessionId } from 'uuid';
 async function register(req, res) {
     try {
-        const headers = req.headers;
-        if (headers.cookie?.includes('session')
-            && headers?.cookie[headers?.cookie.indexOf('session') + 7] === '=') {
+        if (req.cookies.session) {
             return res.send("Log out first");
         }
         else {

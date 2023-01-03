@@ -4,16 +4,14 @@ import {Request, Response} from "express";
 
 async function login(req: Request, res: Response) {
     try {
-        const headers = req.headers
-        if(headers.cookie?.includes('session')) {
-            if (headers.cookie[headers.cookie.indexOf('session') + 7] === '=') {
-                const loggedIn = Boolean( (await pool.query(
-                    'SELECT count(*) FROM sessions WHERE id = $1 AND open = true',
-                    [headers.cookie.split('=')[1]]
-                )).rows[0].count != 0)
-                if(loggedIn) {
-                    return res.send('Already logged in')
-                }
+        if (req.cookies.session) {
+            const sessionId = req.cookies.session
+            const loggedIn = Boolean((await pool.query(
+                'SELECT count(*) FROM sessions WHERE id = $1 AND open = true',
+                [sessionId]
+            )).rows[0].count != 0)
+            if (loggedIn) {
+                return res.send('Already logged in')
             }
         }
         const {username, password}:
@@ -25,7 +23,7 @@ async function login(req: Request, res: Response) {
             'SELECT id, password FROM users WHERE username = $1',
             [username]
         )).rows;
-        if(!user.length || !(await bcrypt.compare(password, user[0].password))) {
+        if (!user.length || !(await bcrypt.compare(password, user[0].password))) {
             return res.status(400).send('Wrong credentials')
         }
         await pool.query(
@@ -36,7 +34,7 @@ async function login(req: Request, res: Response) {
             'SELECT id FROM sessions WHERE user_id = $1',
             [user[0].id]
         )).rows[0].id
-        res.set('Set-Cookie', `session=${sessionId}`)
+        res.cookie('session', sessionId)
         res.send('Success')
     } catch (e) {
         console.log(e)
