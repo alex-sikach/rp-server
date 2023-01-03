@@ -4,19 +4,15 @@ import {IPublicUser} from "../declaration/interfaces";
 
 async function profile(req: Request, res: Response) {
     try {
-        const headers = req.headers;
-        if(
-            headers.cookie?.includes('session')
-            && headers?.cookie[ headers?.cookie.indexOf('session')+7 ] === '='
-        ) {
+        if(req.cookies.session) {
+            const sessionId = req.cookies.session
             const doesntExist = Boolean( (await pool.query(
                 'SELECT count(*) FROM sessions WHERE id = $1 AND open = true',
-                [headers.cookie.split('=')[1]]
+                [sessionId]
             )).rows[0].count == 0)
             if(doesntExist) {
                 return res.status(400).send('Has wrong cookie')
             }
-            const sessionId = headers.cookie.split('=')[1]
             const { expires, user_id } = (await pool.query(
                 'SELECT expires, user_id FROM sessions WHERE id = $1',
                 [sessionId]
