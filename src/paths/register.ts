@@ -7,7 +7,9 @@ import {v4 as randomSessionId} from 'uuid'
 async function register(req: Request, res: Response) {
     try {
         if(req.cookies.session) {
-            return res.send("Log out first")
+            return res.status(405).json({
+                message: "Log out first"
+            })
         } else {
             const body: IRegisterBody = req.body;
             if(
@@ -16,14 +18,18 @@ async function register(req: Request, res: Response) {
                 || body.username.length < 8
                 || body.password.length < 8
             ) {
-                return res.status(400).send('Invalid credentials')
+                return res.status(400).json({
+                    message: 'Invalid credentials'
+                })
             } else {
                 const alreadyRegistered = Boolean((await pool.query(
                     'SELECT count(*) FROM users WHERE username = $1',
                     [body.username]
                 )).rows[0].count != 0)
                 if(alreadyRegistered) {
-                    return res.status(409).send('Already exists')
+                    return res.status(409).json({
+                        message: 'Already exists'
+                    })
                 } else {
                     const hash: string = (await bcrypt.hash(body.password, 5))
                     await pool.query(
@@ -40,13 +46,17 @@ async function register(req: Request, res: Response) {
                         'INSERT INTO sessions(id, user_id, open, expires) VALUES($1, $2, false, $3)',
                         [sessionId, user_id, expires]
                     )
-                    res.send('Success')
+                    res.status(200).json({
+                        message: 'Success'
+                    })
                 }
             }
         }
     } catch (e) {
         console.log(e)
-        res.status(500).send('Unexpected issue')
+        res.status(500).json({
+            message: 'Unexpected issue'
+        })
     }
 }
 

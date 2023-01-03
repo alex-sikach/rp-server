@@ -11,7 +11,9 @@ async function login(req: Request, res: Response) {
                 [sessionId]
             )).rows[0].count != 0)
             if (loggedIn) {
-                return res.send('Already logged in')
+                return res.status(409).json({
+                    message: 'Already logged in'
+                })
             }
         }
         const {username, password}:
@@ -24,7 +26,9 @@ async function login(req: Request, res: Response) {
             [username]
         )).rows;
         if (!user.length || !(await bcrypt.compare(password, user[0].password))) {
-            return res.status(400).send('Wrong credentials')
+            return res.status(400).json({
+                message: 'Wrong credentials'
+            })
         }
         await pool.query(
             'UPDATE sessions SET open = true WHERE user_id = $1',
@@ -35,10 +39,14 @@ async function login(req: Request, res: Response) {
             [user[0].id]
         )).rows[0].id
         res.cookie('session', sessionId)
-        res.send('Success')
+        res.status(200).json({
+            message: 'Success'
+        })
     } catch (e) {
         console.log(e)
-        res.status(500).send('Unexpected issue')
+        res.status(500).json({
+            message: 'Unexpected issue'
+        })
     }
 }
 

@@ -5,15 +5,21 @@ async function logout(req, res) {
             const sessionId = req.cookies.session;
             await pool.query('UPDATE sessions SET open = false WHERE id = $1', [sessionId]);
             res.clearCookie('session');
-            res.send('Success');
+            res.status(200).json({
+                message: 'Success'
+            });
         }
         else {
-            res.send('Already logged out');
+            res.status(409).json({
+                message: 'Already logged out'
+            });
         }
     }
     catch (e) {
         console.log(e);
-        res.status(500).send('Unexpected issue');
+        res.status(500).json({
+            message: 'Unexpected issue'
+        });
     }
 }
 export default logout;
