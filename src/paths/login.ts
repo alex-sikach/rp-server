@@ -6,12 +6,19 @@ async function login(req: Request, res: Response) {
     try {
         if (req.cookies.session) {
             const sessionId = req.cookies.session
-            const loggedIn = Boolean((await pool.query(
-                'SELECT count(*) FROM sessions WHERE id = $1 AND open = true',
+            const session = (await pool.query(
+                'SELECT expires, open FROM sessions WHERE id = $1',
                 [sessionId]
-            )).rows[0].count != 0)
-            if (loggedIn) {
-                return res.status(409).json({
+            )).rows[0];
+            const expires = session.expires;
+            const open = session.open;
+            if(!expires) {
+                return res.status(400).json({
+                    message: 'Has wrong cookie'
+                })
+            }
+            if(open && Date.now() < expires) {
+                return res.status(200).json({
                     message: 'Already logged in'
                 })
             }
@@ -30,9 +37,10 @@ async function login(req: Request, res: Response) {
                 message: 'Wrong credentials'
             })
         }
+        const expires = Date.now() + (1*24*60*60*1000) // expires in 1 day(milliseconds)
         await pool.query(
-            'UPDATE sessions SET open = true WHERE user_id = $1',
-            [user[0].id]
+            'UPDATE sessions SET expires = $1, open = true WHERE user_id = $2',
+            [expires, user[0].id]
         )
         const sessionId = (await pool.query(
             'SELECT id FROM sessions WHERE user_id = $1',
