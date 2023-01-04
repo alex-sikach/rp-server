@@ -3,15 +3,24 @@ async function deleteAccount(req, res) {
     try {
         if (req.cookies.session) {
             const sessionId = req.cookies.session;
-            const loggedIn = Boolean((await pool.query('SELECT count(*) FROM sessions WHERE id = $1 AND open = true', [sessionId])).rows[0].count != 0);
-            if (!loggedIn) {
-                res.status(401).json({
-                    message: 'Log in first'
+            const session = (await pool.query('SELECT user_id, expires, open FROM sessions WHERE id = $1', [sessionId])).rows[0];
+            const expires = session.expires;
+            const user_id = session.user_id;
+            const open = session.open;
+            if (!expires) {
+                return res.status(400).json({
+                    message: 'Has wrong cookie'
                 });
             }
-            const { user_id } = (await pool.query('SELECT user_id FROM sessions WHERE id = $1', [sessionId])).rows[0];
+            if (open && Date.now() > expires) {
+                // if sessions expired -> close the session and warn the user
+                await pool.query('UPDATE sessions SET open = false WHERE user_id = $1', [user_id]);
+                return res.status(403).json({
+                    message: 'Session has expired. Log in again'
+                });
+            }
             res.clearCookie('session');
-            // deleting user and sessions is being deleted itself(on cascade delete)
+            // deleting user -> sessions is being deleted itself(on cascade delete)
             await pool.query('DELETE FROM users WHERE id = $1', [user_id]);
             res.status(200).json({
                 message: 'Success'
