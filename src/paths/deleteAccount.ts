@@ -9,10 +9,10 @@ async function deleteAccount(req: Request, res: Response) {
                 'SELECT user_id, expires, open FROM sessions WHERE id = $1',
                 [sessionId]
             )).rows[0];
-            const expires = session.expires;
-            const user_id = session.user_id;
-            const open = session.open;
-            if(!expires) {
+            const expires = session?.expires;
+            const user_id = session?.user_id;
+            const open = session?.open;
+            if(!session) {
                 return res.status(400).json({
                     message: 'Has wrong cookie'
                 })
