@@ -4,6 +4,7 @@ import {Request, Response} from "express";
 async function logout(req: Request, res: Response) {
     try {
         if(req.cookies.session) {
+            res.clearCookie('session')
             const sessionId = req.cookies.session
             const exist = (await pool.query(
                 'SELECT count(*) FROM sessions WHERE id = $1',
@@ -18,7 +19,6 @@ async function logout(req: Request, res: Response) {
                 'UPDATE sessions SET open = false WHERE id = $1',
                 [sessionId]
             )
-            res.clearCookie('session')
             res.status(200).json({
                 message: 'Success'
             })
