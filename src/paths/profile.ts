@@ -10,10 +10,10 @@ async function profile(req: Request, res: Response) {
                 'SELECT user_id, expires, open FROM sessions WHERE id = $1',
                 [sessionId]
             )).rows[0];
-            const expires = session.expires;
-            const open = session.open;
-            const user_id = session.user_id;
-            if(!expires) {
+            const expires = session?.expires;
+            const open = session?.open;
+            const user_id = session?.user_id;
+            if(!session) {
                 return res.status(400).json({
                     message: 'Has wrong cookie'
                 })

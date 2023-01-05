@@ -19,8 +19,8 @@ async function register(req, res) {
                 });
             }
             else {
-                const alreadyRegistered = Boolean((await pool.query('SELECT count(*) FROM users WHERE username = $1', [body.username])).rows[0].count != 0);
-                if (alreadyRegistered) {
+                const exist = Boolean((await pool.query('SELECT count(*) FROM users WHERE username = $1', [body.username])).rows[0].count != 0);
+                if (exist) {
                     return res.status(409).json({
                         message: 'Already exists'
                     });

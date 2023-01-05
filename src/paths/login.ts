@@ -10,9 +10,9 @@ async function login(req: Request, res: Response) {
                 'SELECT expires, open FROM sessions WHERE id = $1',
                 [sessionId]
             )).rows[0];
-            const expires = session.expires;
-            const open = session.open;
-            if(!expires) {
+            const expires = session?.expires;
+            const open = session?.open;
+            if(!session) {
                 return res.status(400).json({
                     message: 'Has wrong cookie'
                 })
