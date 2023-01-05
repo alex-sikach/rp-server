@@ -5,6 +5,15 @@ async function logout(req: Request, res: Response) {
     try {
         if(req.cookies.session) {
             const sessionId = req.cookies.session
+            const exist = (await pool.query(
+                'SELECT count(*) FROM sessions WHERE id = $1',
+                [sessionId]
+            )).rows[0].count != 0;
+            if(!exist) {
+                return res.status(400).json({
+                    message: 'Has wrong cookie'
+                })
+            }
             await pool.query(
                 'UPDATE sessions SET open = false WHERE id = $1',
                 [sessionId]
@@ -14,7 +23,7 @@ async function logout(req: Request, res: Response) {
                 message: 'Success'
             })
         } else {
-            res.status(409).json({
+            res.status(200).json({
                 message: 'Already logged out'
             })
         }
