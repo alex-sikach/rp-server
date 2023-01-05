@@ -2,6 +2,7 @@ import pool from '../pool.js';
 async function logout(req, res) {
     try {
         if (req.cookies.session) {
+            res.clearCookie('session');
             const sessionId = req.cookies.session;
             const exist = (await pool.query('SELECT count(*) FROM sessions WHERE id = $1', [sessionId])).rows[0].count != 0;
             if (!exist) {
@@ -10,7 +11,6 @@ async function logout(req, res) {
                 });
             }
             await pool.query('UPDATE sessions SET open = false WHERE id = $1', [sessionId]);
-            res.clearCookie('session');
             res.status(200).json({
                 message: 'Success'
             });
