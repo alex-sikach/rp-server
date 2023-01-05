@@ -41,8 +41,7 @@ https://rp.cyclic.app/api/
 ## **get**: `https://rp.cyclic.app/api/auth/logout`
 ### Status code : response:
 - 200 : `{message: "Success"}`
----
-- 409 : `{message: "Already logged out"}`
+- 200 : `{message: "Already logged out"}`
 ---
 - 500 : `{message: "Unexpected issue"}`
 ## **get**: `https://rp.cyclic.app/api/auth/delete-account`

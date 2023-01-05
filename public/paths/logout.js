@@ -10,7 +10,7 @@ async function logout(req, res) {
             });
         }
         else {
-            res.status(409).json({
+            res.status(200).json({
                 message: 'Already logged out'
             });
         }
