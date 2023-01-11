@@ -28,7 +28,9 @@ async function login(req, res) {
         const expires = Date.now() + (1 * 24 * 60 * 60 * 1000); // expires in 1 day(milliseconds)
         await pool.query('UPDATE sessions SET expires = $1, open = true WHERE user_id = $2', [expires, user[0].id]);
         const sessionId = (await pool.query('SELECT id FROM sessions WHERE user_id = $1', [user[0].id])).rows[0].id;
-        res.cookie('session', sessionId);
+        res.cookie('session', sessionId, {
+            expires: new Date(expires)
+        });
         res.status(200).json({
             message: 'Success'
         });

@@ -46,7 +46,9 @@ async function login(req: Request, res: Response) {
             'SELECT id FROM sessions WHERE user_id = $1',
             [user[0].id]
         )).rows[0].id
-        res.cookie('session', sessionId)
+        res.cookie('session', sessionId, {
+            expires: new Date(expires)
+        })
         res.status(200).json({
             message: 'Success'
         })
