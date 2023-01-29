@@ -4,6 +4,7 @@ import deleteAccount from "./paths/auth/deleteAccount.js"
 import login from "./paths/auth/login.js"
 import logout from './paths/auth/logout.js'
 import editTheme from "./paths/edit/theme.js"
+import editName from "./paths/edit/name.js";
 
 export default {
     register,
@@ -11,5 +12,6 @@ export default {
     deleteAccount,
     login,
     logout,
-    editTheme
+    editTheme,
+    editName
 }

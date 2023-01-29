@@ -20,6 +20,7 @@ app.post('/api/auth/login', paths.login);
 app.get('/api/auth/logout', paths.logout);
 app.get('/api/fetch/profile', paths.profile);
 app.post('/api/edit/theme', paths.editTheme);
+app.post('/api/edit/name', paths.editName);
 app.listen(port, async () => {
     try {
         console.log(`server has started on port ${port}`);
