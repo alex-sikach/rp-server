@@ -1,5 +1,5 @@
 import pool from "../../pool.js";
-async function deleteAccount(req, res) {
+async function editTheme(req, res) {
     try {
         if (req.cookies.session) {
             const sessionId = req.cookies.session;
@@ -18,9 +18,19 @@ async function deleteAccount(req, res) {
                     message: 'Session has expired. Log in again'
                 });
             }
-            res.clearCookie('session');
-            // deleting user -> sessions is being deleted itself(on cascade delete)
-            await pool.query('DELETE FROM users WHERE id = $1', [user_id]);
+            const theme = req.body.theme;
+            let valid = false;
+            ['classic', 'dark', 'gray', 'christmas'].forEach(e => {
+                if (e === theme) {
+                    valid = true;
+                }
+            });
+            if (!valid) {
+                return res.status(400).json({
+                    message: 'Theme is not valid'
+                });
+            }
+            await pool.query('UPDATE users SET theme = $1 WHERE id = $2', [theme, user_id]);
             res.status(200).json({
                 message: 'Success'
             });
@@ -32,10 +42,10 @@ async function deleteAccount(req, res) {
         }
     }
     catch (e) {
-        console.log(e);
         res.status(500).json({
             message: 'Unexpected issue'
         });
+        console.log(e);
     }
 }
-export default deleteAccount;
+export default editTheme;

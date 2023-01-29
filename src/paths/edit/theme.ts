@@ -1,24 +1,22 @@
 import pool from "../../pool.js";
 import {Request, Response} from "express";
-import {IPublicUser} from "../../declaration/interfaces";
 
-async function changeTheme(req: Request, res: Response) {
+async function editTheme(req: Request, res: Response) {
     try {
         if (req.cookies.session) {
             const sessionId = req.cookies.session
             const session = (await pool.query(
-                'SELECT user_id, expires, open FROM sessions WHERE id = $1',
+                'SELECT user_id, expires FROM sessions WHERE id = $1',
                 [sessionId]
             )).rows[0];
             const expires = session?.expires;
-            const open = session?.open;
             const user_id = session?.user_id;
             if (!session) {
                 return res.status(400).json({
                     message: 'Has wrong cookie'
                 })
             }
-            if (open && Date.now() > expires) {
+            if (Date.now() > expires) {
                 // if sessions expired -> close the session and warn the user
                 await pool.query(
                     'UPDATE sessions SET open = false WHERE user_id = $1',
@@ -60,4 +58,4 @@ async function changeTheme(req: Request, res: Response) {
     }
 }
 
-export default changeTheme
+export default editTheme

@@ -23,7 +23,7 @@ app.get('/api/auth/delete-account', paths.deleteAccount)
 app.post('/api/auth/login', paths.login)
 app.get('/api/auth/logout', paths.logout)
 app.get('/api/fetch/profile', paths.profile)
-app.post('/api/edit/theme', paths.changeTheme)
+app.post('/api/edit/theme', paths.editTheme)
 
 app.listen(port, async () => {
     try {
