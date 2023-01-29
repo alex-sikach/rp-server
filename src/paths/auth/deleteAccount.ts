@@ -1,8 +1,7 @@
-import pool from '../pool.js'
+import pool from "../../pool.js";
 import {Request, Response} from "express";
-import {IPublicUser} from "../declaration/interfaces";
 
-async function profile(req: Request, res: Response) {
+async function deleteAccount(req: Request, res: Response) {
     try {
         if(req.cookies.session) {
             const sessionId = req.cookies.session
@@ -11,8 +10,8 @@ async function profile(req: Request, res: Response) {
                 [sessionId]
             )).rows[0];
             const expires = session?.expires;
-            const open = session?.open;
             const user_id = session?.user_id;
+            const open = session?.open;
             if(!session) {
                 return res.status(400).json({
                     message: 'Has wrong cookie'
@@ -28,22 +27,26 @@ async function profile(req: Request, res: Response) {
                     message: 'Session has expired. Log in again'
                 })
             }
-            const user: IPublicUser = (await pool.query(
-                'SELECT username, name, lastname, avatar, theme FROM users WHERE id = $1',
-                [user_id]
-            )).rows[0]
-            res.status(200).json(user)
+            res.clearCookie('session')
+            // deleting user -> sessions is being deleted itself(on cascade delete)
+            await pool.query(
+                'DELETE FROM users WHERE id = $1',
+                [ user_id ]
+            )
+            res.status(200).json({
+                message: 'Success'
+            })
         } else {
             res.status(401).json({
                 message: 'Log in first'
             })
         }
     } catch (e) {
+        console.log(e);
         res.status(500).json({
             message: 'Unexpected issue'
         })
-        console.log(e);
     }
 }
 
-export default profile
+export default deleteAccount

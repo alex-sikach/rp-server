@@ -1,7 +1,7 @@
-import pool from "../pool.js";
+import pool from "../../pool.js";
 import {Request, Response} from "express";
 import bcrypt from 'bcryptjs'
-import {IRegisterBody} from "../declaration/interfaces";
+import {IRegisterBody} from "../../declaration/interfaces";
 import {v4 as randomSessionId} from 'uuid'
 
 async function register(req: Request, res: Response) {

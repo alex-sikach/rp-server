@@ -1,4 +1,4 @@
-import pool from "../pool.js";
+import pool from "../../pool.js";
 import bcrypt from "bcryptjs";
 import {Request, Response} from "express";
 

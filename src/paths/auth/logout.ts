@@ -1,4 +1,4 @@
-import pool from '../pool.js'
+import pool from '../../pool.js'
 import {Request, Response} from "express";
 
 async function logout(req: Request, res: Response) {
