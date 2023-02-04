@@ -31,8 +31,8 @@ https://rp.cyclic.app/api/
  - 500 : `{message: "Unexpected issue"}`
 ## **post**: `https://rp.cyclic.app/api/auth/login`
 ### Status code : response:
- - 200 : `{message: "Success"}`
- - 200 : `{message: "Already logged in"}`
+ - 200 : `{message: "Success", data: IAllUserData}`
+ - 200 : `{message: "Already logged in", data: IAllUserData}`
 ---
  - 400 : `{message: "Wrong credentials"}`
  - 400 : `{message: "Has wrong cookie"}`
