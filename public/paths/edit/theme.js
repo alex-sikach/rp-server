@@ -32,7 +32,8 @@ async function editTheme(req, res) {
             }
             await pool.query('UPDATE users SET theme = $1 WHERE id = $2', [theme, user_id]);
             res.status(200).json({
-                message: 'Success'
+                message: 'Success',
+                data: { theme }
             });
         }
         else {
