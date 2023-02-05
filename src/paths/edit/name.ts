@@ -47,7 +47,8 @@ async function editName(req: Request, res: Response) {
                 [newName, user_id]
             )
             res.status(200).json({
-                message: 'Success'
+                message: 'Success',
+                data: {name: newName}
             })
         }
     } catch (e) {

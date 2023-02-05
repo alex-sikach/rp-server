@@ -43,7 +43,8 @@ async function editTheme(req: Request, res: Response) {
                     [theme, user_id]
                 )
                 res.status(200).json({
-                    message: 'Success'
+                    message: 'Success',
+                    data: {theme}
                 })
         } else {
             res.status(401).json({

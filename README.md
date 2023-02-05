@@ -31,8 +31,8 @@ https://rp.cyclic.app/api/
  - 500 : `{message: "Unexpected issue"}`
 ## **post**: `https://rp.cyclic.app/api/auth/login`
 ### Status code : response:
- - 200 : `{message: "Success"}`
- - 200 : `{message: "Already logged in"}`
+ - 200 : `{message: "Success", data: IAllUserData}`
+ - 200 : `{message: "Already logged in", data: IAllUserData}`
 ---
  - 400 : `{message: "Wrong credentials"}`
  - 400 : `{message: "Has wrong cookie"}`
@@ -55,7 +55,7 @@ https://rp.cyclic.app/api/
 - 500 : `{message: "Unexpected issue"}`
 ## **get**: `https://rp.cyclic.app/api/fetch/profile`
 ### Status code : response:
-- 200 : `user: IPublicUser`
+- 200 : `{message: "Success", data: IPublicUser}`
 ---
 - 400 : `{message: "Has wrong cookie"}`
 - 401 : `{message: "Log in first"}`
@@ -64,7 +64,7 @@ https://rp.cyclic.app/api/
 - 500 : `{message: "Unexpected issue"}`
 ## **post**: `https://rp.cyclic.app/api/edit/theme`
 ### Status code : response:
-- 200 : `{message: "Success"}`
+- 200 : `{message: "Success", data: {theme}}`
 ---
 - 400 : `{message: "Has wrong cookie"}`
 - 400 : `{message: "Theme is not valid"}`
@@ -74,7 +74,7 @@ https://rp.cyclic.app/api/
 - 500 : `{message: "Unexpected issue"}`
 - ## **post**: `https://rp.cyclic.app/api/edit/name`
 ### Status code : response:
-- 200 : `{message: "Success"}`
+- 200 : `{message: "Success", data: {name}}`
 ---
 - 400 : `{message: "Has wrong cookie"}`
 - 400 : `{message: "The name is not valid"}`
@@ -84,7 +84,7 @@ https://rp.cyclic.app/api/
 - 500 : `{message: "Unexpected issue"}`
 - ## **post**: `https://rp.cyclic.app/api/edit/lastname`
 ### Status code : response:
-- 200 : `{message: "Success"}`
+- 200 : `{message: "Success", data: {lastname}}`
 ---
 - 400 : `{message: "Has wrong cookie"}`
 - 400 : `{message: "The name is not valid"}`

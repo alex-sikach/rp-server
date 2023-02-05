@@ -37,7 +37,8 @@ async function editName(req, res) {
             }
             await pool.query('UPDATE users SET name = $1 WHERE id = $2', [newName, user_id]);
             res.status(200).json({
-                message: 'Success'
+                message: 'Success',
+                data: { name: newName }
             });
         }
     }
