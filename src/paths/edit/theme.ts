@@ -28,7 +28,7 @@ async function editTheme(req: Request, res: Response) {
             }
             const theme = req.body.theme;
                 let valid = false;
-                ['classic', 'dark', 'gray', 'christmas'].forEach(e => {
+                ['classic', 'dark', 'christmas'].forEach(e => {
                     if(e === theme) {
                         valid = true;
                     }

@@ -1,7 +1,6 @@
 export type theme =
     'classic'
     | 'dark'
-    | 'gray'
     |'christmas'
 export type username = string
 export type name = string
