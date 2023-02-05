@@ -55,7 +55,7 @@ https://rp.cyclic.app/api/
 - 500 : `{message: "Unexpected issue"}`
 ## **get**: `https://rp.cyclic.app/api/fetch/profile`
 ### Status code : response:
-- 200 : `user: IPublicUser`
+- 200 : `{message: "Success", data: IPublicUser}`
 ---
 - 400 : `{message: "Has wrong cookie"}`
 - 401 : `{message: "Log in first"}`

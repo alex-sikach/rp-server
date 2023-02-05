@@ -19,7 +19,10 @@ async function profile(req, res) {
                 });
             }
             const user = (await pool.query('SELECT username, name, lastname, avatar, theme FROM users WHERE id = $1', [user_id])).rows[0];
-            res.status(200).json(user);
+            res.status(200).json({
+                message: "Success",
+                data: user
+            });
         }
         else {
             res.status(401).json({
