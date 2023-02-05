@@ -74,7 +74,7 @@ https://rp.cyclic.app/api/
 - 500 : `{message: "Unexpected issue"}`
 - ## **post**: `https://rp.cyclic.app/api/edit/name`
 ### Status code : response:
-- 200 : `{message: "Success"}`
+- 200 : `{message: "Success", data: {name}}`
 ---
 - 400 : `{message: "Has wrong cookie"}`
 - 400 : `{message: "The name is not valid"}`
