@@ -47,7 +47,8 @@ async function editLastname(req: Request, res: Response) {
                 [newLastname, user_id]
             )
             res.status(200).json({
-                message: 'Success'
+                message: 'Success',
+                data: {lastname: newLastname}
             })
         }
     } catch (e) {
