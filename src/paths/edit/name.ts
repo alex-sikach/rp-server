@@ -50,6 +50,10 @@ async function editName(req: Request, res: Response) {
                 message: 'Success',
                 data: {name: newName}
             })
+        } else {
+            res.status(401).json({
+                message: 'Log in first'
+            })
         }
     } catch (e) {
         res.status(500).json({

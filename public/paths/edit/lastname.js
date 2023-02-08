@@ -41,6 +41,11 @@ async function editLastname(req, res) {
                 data: { lastname: newLastname }
             });
         }
+        else {
+            res.status(401).json({
+                message: 'Log in first'
+            });
+        }
     }
     catch (e) {
         res.status(500).json({
