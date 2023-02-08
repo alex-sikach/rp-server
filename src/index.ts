@@ -18,14 +18,18 @@ app.use(express.static(path.join(__dirname, '../client-build')))
 app.use(cookieParser())
 
 // ROUTES
+// auth
 app.post('/api/auth/register', paths.register)
 app.get('/api/auth/delete-account', paths.deleteAccount)
 app.post('/api/auth/login', paths.login)
 app.get('/api/auth/logout', paths.logout)
+// fetch
 app.get('/api/fetch/profile', paths.profile)
+// edit
 app.post('/api/edit/theme', paths.editTheme)
 app.post('/api/edit/name', paths.editName)
 app.post('/api/edit/lastname', paths.editLastname)
+app.post('/api/edit/password', paths.editPassword)
 
 app.listen(port, async () => {
     try {
