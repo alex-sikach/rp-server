@@ -29,7 +29,7 @@ async function editPassword(req: Request, res: Response) {
                 })
             }
             const newPassword: password | undefined = req.body.password
-            if(newPassword === undefined || newPassword.length < 8) {
+            if(newPassword === undefined || newPassword.length < 8 || newPassword.length > 100) {
                 return res.status(400).json({
                     message: 'The password is not valid'
                 })

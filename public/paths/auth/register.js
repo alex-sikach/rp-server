@@ -11,9 +11,13 @@ async function register(req, res) {
         else {
             const body = req.body;
             if (body.name.length < 2
+                || body.name.length > 25
                 || body.lastname.length < 2
+                || body.lastname.length > 25
                 || body.username.length < 8
-                || body.password.length < 8) {
+                || body.username.length > 100
+                || body.password.length < 8
+                || body.password.length > 100) {
                 return res.status(400).json({
                     message: 'Invalid credentials'
                 });
@@ -26,7 +30,7 @@ async function register(req, res) {
                     });
                 }
                 else {
-                    const hash = (await bcrypt.hash(body.password, 5));
+                    const hash = (await bcrypt.hash(body.password, 5)).slice(0, 60); // manually sliced it to make sure it's 60 length string
                     await pool.query('INSERT INTO users(username, name, lastname, password) VALUES($1, $2, $3, $4)', [body.username, body.name, body.lastname, hash]);
                     const user_id = Number((await pool.query('SELECT id FROM users WHERE username = $1', [body.username])).rows[0].id);
                     const sessionId = (randomSessionId()).slice(0, 100);
