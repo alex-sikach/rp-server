@@ -6,6 +6,7 @@ import logout from './paths/auth/logout.js'
 import editTheme from "./paths/edit/theme.js"
 import editName from "./paths/edit/name.js";
 import editLastname from "./paths/edit/lastname.js"
+import editPassword from "./paths/edit/password.js";
 
 export default {
     register,
@@ -15,5 +16,6 @@ export default {
     logout,
     editTheme,
     editName,
-    editLastname
+    editLastname,
+    editPassword
 }
