@@ -92,6 +92,16 @@ https://rp.cyclic.app/api/
 - 403 : `{message: "Session has expired. Log in again"}`
 ---
 - 500 : `{message: "Unexpected issue"}`
+ - ## **post**: `https://rp.cyclic.app/api/edit/password`
+### Status code : response:
+- 200 : `{message: "Success", data: {password}}`
+---
+- 400 : `{message: "Has wrong cookie"}`
+- 400 : `{message: "The name is not valid"}`
+- 401 : `{message: "Log in first"}`
+- 403 : `{message: "Session has expired. Log in again"}`
+---
+- 500 : `{message: "Unexpected issue"}`
 
 # Links:
 - RP client github: https://github.com/alex-sikach/rp
