@@ -17,7 +17,10 @@ https://rp.cyclic.app/api/
 
 ### <u>Editing some personal settings(color theme e.g.)</u> ---
 
-**post**: `https://rp.cyclic.app/api/edit/theme` - endpoint to change your personal color theme 
+**post**: `https://rp.cyclic.app/api/edit/theme` - endpoint to change your personal color theme<br>
+**post**: `https://rp.cyclic.app/api/edit/name` - endpoint to change your personal name<br>
+**post**: `https://rp.cyclic.app/api/edit/lastname` - endpoint to change your personal lastname<br>
+**post**: `https://rp.cyclic.app/api/edit/password` - endpoint to change your personal password<br>
 
 # Server response cases:
 ## **post**: `https://rp.cyclic.app/api/auth/register`
